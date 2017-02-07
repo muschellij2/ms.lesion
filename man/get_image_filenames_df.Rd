@@ -4,7 +4,6 @@
 \alias{get_image_filenames_df}
 \alias{get_image_filenames_matrix}
 \alias{get_image_filenames_list}
-\alias{get_image_filenames_list_by_visit}
 \alias{get_image_filenames_list_by_subject}
 \title{Get Image Filenames in a data.frame}
 \usage{
@@ -14,8 +13,6 @@ get_image_filenames_df(group = c("training", "test"),
 get_image_filenames_matrix(...)
 
 get_image_filenames_list(...)
-
-get_image_filenames_list_by_visit(...)
 
 get_image_filenames_list_by_subject(...)
 }
@@ -29,8 +26,6 @@ all IDs are returned}
 \item{long}{if \code{TRUE}, each row is a subject, visit, modality pair}
 
 \item{...}{arguments passed to \code{\link{get_image_filenames_df}}}
-
-\item{visits}{Vector of scan indices to return (1 or 2 or both)}
 }
 \value{
 Data.frame of filenames
@@ -42,6 +37,5 @@ Return a data.frame of filenames for the images
 get_image_filenames_df()
 get_image_filenames_matrix()  
 get_image_filenames_list()   
-get_image_filenames_list_by_visit()    
 get_image_filenames_list_by_subject()     
 }

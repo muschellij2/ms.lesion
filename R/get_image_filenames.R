@@ -5,7 +5,6 @@
 #' all IDs are returned
 #' @param modalities vector of image modalities within
 #' \code{c("FLAIR", "T2", "T2", "PD")} to return
-#' @param visits Vector of scan indices to return (1 or 2 or both)
 #' @param long if \code{TRUE}, each row is a subject, visit, modality pair
 #' 
 #' @return Data.frame of filenames
@@ -124,37 +123,16 @@ get_image_filenames_list = function(...){
   if (nrow(df) == 0) {
     return(NULL)
   }  
+  rn = rownames(df) = df$id
   df$id = df$visit = NULL
-  ss = as.list(df)
-  return(ss)
-}
-
-
-#' @rdname get_image_filenames_df
-#' @examples
-#' get_image_filenames_list_by_visit()    
-#' @export
-get_image_filenames_list_by_visit = function(...){
-  
-  df = get_image_filenames_df(..., long = TRUE)
-  if (is.null(df)) {
-    return(NULL)
-  }  
-  if (nrow(df) == 0) {
-    return(NULL)
-  }    
-  ss = split(df, df$visit)
-  ss = lapply(ss, function(x){
-    x$visit = NULL
-    x = split(x, x$id)
-    x = lapply(x, function(r) {
-      r$id = NULL
-      r$filename
-    })    
+  df = lapply(df, function(x){
+    names(x) = rn
     x
   })
-  return(ss)
+  return(df)
 }
+
+
 
 #' @rdname get_image_filenames_df
 #' @examples
@@ -170,14 +148,11 @@ get_image_filenames_list_by_subject = function(...){
     return(NULL)
   }    
   ss = split(df, df$id)
-  ss = lapply(ss, function(x){
-    x$id = NULL
-    x = split(x, x$visit)
-    x = lapply(x, function(r) {
-      r$visit = NULL
-      r$filename
-    })
-    x    
+  ss = lapply(ss, function(r){
+    mod_names = r$modality
+    x = r$filename
+    names(x) = mod_names
+    return(x)
   })
   return(ss)
 }

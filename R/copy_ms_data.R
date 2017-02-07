@@ -1,16 +1,16 @@
-#' @title Copy Kirby21 Data to an output directory
+#' @title Copy MS Data to an output directory
 #'
-#' @description Copies files from Kirby21 Package to an output directory
+#' @description Copies files from MS Lesion Package to an output directory
 #' @param outdir Output directory for data
 #' @param ... Arguments to pass to \code{\link{get_image_filenames}}
 #' @return Logical if files are copied
 #' @export
-copy_kirby21_data = function(outdir, ...){
+copy_ms_data = function(outdir, ...){
   niis = get_image_filenames(...)
   stopifnot(length(niis) > 0)
   ### get just the filenames
   
-  k21_file = system.file(package = "kirby21")
+  k21_file = system.file(package = "ms.lesion")
   stubs = gsub(k21_file, "", niis, fixed = TRUE)
   stubs = gsub("^/", "", stubs)
   

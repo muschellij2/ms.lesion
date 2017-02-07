@@ -1,13 +1,13 @@
 Package: ms.lesion
 Type: Package
 Title: Example Magnetic Resonance Imaging Data from the Multiple Sclerosis Challenge
-Version: 0.0.2
+Version: 0.0.3
 Date: 2017-02-06
 Author: John Muschelli <muschellij2@gmail.com>
 Maintainer: John Muschelli <muschellij2@gmail.com>
 Description: Structural multi-modal magnetic resonance imaging ('MRI')
     data from the multiple sclerosis ('MS') challenge.
-License: GPL-2 
+License: GPL-2 + LICENSE
 LazyData: true
 LazyLoad: true
 Imports:
