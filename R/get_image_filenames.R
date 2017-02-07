@@ -1,9 +1,10 @@
 #' @title Get Image Filenames in a data.frame
 #'
 #' @description Return a data.frame of filenames for the images
-#' @param ids ID to return
+#' @param group group of IDs to gather.  If both \code{c("training", "test")},
+#' all IDs are returned
 #' @param modalities vector of image modalities within
-#' \code{c("FLAIR", "MPRAGE", "T2w", "fMRI", "DTI")} to return
+#' \code{c("FLAIR", "T2", "T2", "PD")} to return
 #' @param visits Vector of scan indices to return (1 or 2 or both)
 #' @param long if \code{TRUE}, each row is a subject, visit, modality pair
 #' 
@@ -11,36 +12,33 @@
 #' 
 #' @examples
 #' get_image_filenames_df()
-#' @importFrom utils installed.packages 
 #' @importFrom stats reshape
 #' 
 #' @export
 get_image_filenames_df = function(
-  ids = get_ids(), 
+  group = c("training", "test"),
   modalities = all_modalities(), 
-  visits = c(1,2),
   long = TRUE){
   
-  
-  ##########################################
-  # Get installed packages
-  packs = installed.packages()
-  packs = packs[, "Package"]
+  ids = get_ids(group = group)
+  modalities = tolower(modalities)
   ##########################################
   
   ##########################################
   # Make the data.frames
   ##########################################
   modalities = unique(modalities)
-  visits = as.numeric(visits)
-  visits = sprintf("%02.0f", visits)
-  v_ids = c(outer(ids, visits, paste, sep = "-"))
-  fnames = c(outer(v_ids, modalities, paste, sep = "-"))
+  visits = sprintf("%02.0f", 1)
+  v_ids = c(outer(ids, visits, paste, sep = "_"))
+  fnames = c(outer(v_ids, modalities, paste, sep = "_"))
+  
   fnames = paste0(fnames, ".nii.gz")
-  df = data.frame(filename = fnames, stringsAsFactors = FALSE)
-  ss = strsplit(df$filename, "-")
-  df$Subject_ID = sapply(ss, `[`, 1)
-  df$visit = as.numeric(sapply(ss, `[`, 2))
+  df = data.frame(filename = fnames, 
+                  stringsAsFactors = FALSE)
+  ss = strsplit(df$filename, "_")
+  df$id = sapply(ss, `[`, 1)
+  # df$visit = as.numeric(sapply(ss, `[`, 2))
+  
   nii.stub = function(x){
     nx = names(x)
     x = path.expand(x)
@@ -50,34 +48,23 @@ get_image_filenames_df = function(
     return(stub)    
   }
   df$modality = nii.stub(sapply(ss, `[`, 3))
-  df$filename = file.path(paste0("visit_", df$visit), 
-                          df$Subject_ID, df$filename)
+  df$filename = file.path(df$id, df$filename)
+  
   # df$id = NULL
   ##########################################
   # Set the package names
   ##########################################
   mod = modality_df()
+  df$modality = toupper(df$modality)
   df = merge(df, mod, sort = FALSE, by = "modality", all.x = TRUE)
 
   ########################################
   # Find those not installed and warn
   ########################################  
-  not_installed = setdiff(df$package, packs)
-  if (length(not_installed) > 0) {
-    not_installed = paste(not_installed, collapse = " ")
-    warning(paste0("Packages ", not_installed, 
-                   " are not installed, modalities from ", 
-                   "these packages will be missing"))
-  }
-  df$filename = mapply(function(fname, pkg){
-    system.file( fname, package = pkg)
-  }, df$filename, df$package)
-  
-  df = df[ !(df$filename %in% ""), , drop = FALSE]
-  df$package = NULL
-  
+  df$filename = system.file( "extdata", df$filename, package = "ms.lesion")
+
   if (!long) {
-    df = reshape(df, idvar = c("Subject_ID", "visit"), 
+    df = reshape(df, idvar = c("id"), 
                  timevar = "modality", direction = "wide")
     cn = colnames(df)
     cn = sub("^filename[.]", "", cn)
@@ -111,7 +98,7 @@ get_image_filenames = function(...){
 get_image_filenames_matrix = function(...){
   df = get_image_filenames_df(...,
                               long = FALSE)
-  df$Subject_ID = NULL
+  df$id = NULL
   df$visit = NULL
   
   if (is.null(df)) {
@@ -137,7 +124,7 @@ get_image_filenames_list = function(...){
   if (nrow(df) == 0) {
     return(NULL)
   }  
-  df$Subject_ID = df$visit = NULL
+  df$id = df$visit = NULL
   ss = as.list(df)
   return(ss)
 }
@@ -159,9 +146,9 @@ get_image_filenames_list_by_visit = function(...){
   ss = split(df, df$visit)
   ss = lapply(ss, function(x){
     x$visit = NULL
-    x = split(x, x$Subject_ID)
+    x = split(x, x$id)
     x = lapply(x, function(r) {
-      r$Subject_ID = NULL
+      r$id = NULL
       r$filename
     })    
     x
@@ -182,9 +169,9 @@ get_image_filenames_list_by_subject = function(...){
   if (nrow(df) == 0) {
     return(NULL)
   }    
-  ss = split(df, df$Subject_ID)
+  ss = split(df, df$id)
   ss = lapply(ss, function(x){
-    x$Subject_ID = NULL
+    x$id = NULL
     x = split(x, x$visit)
     x = lapply(x, function(r) {
       r$visit = NULL
