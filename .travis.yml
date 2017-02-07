@@ -1,0 +1,8 @@
+language: R
+sudo: no
+cache: packages
+use_bioc: yes
+bioc_required: yes
+warnings_are_errors: yes
+r_check_args: --as-cran
+

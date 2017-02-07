@@ -1,0 +1,30 @@
+year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date, perl = TRUE)
+vers <- paste("R package version", meta$Version)
+
+structure(list(carass2017longitudinal = structure(list(title = "Longitudinal multiple sclerosis lesion segmentation: resource \\& challenge", 
+    author = structure(list(structure(list(given = "Aaron", family = "Carass", 
+        role = NULL, email = NULL, comment = NULL), .Names = c("given", 
+    "family", "role", "email", "comment")), structure(list(given = "Snehashis", 
+        family = "Roy", role = NULL, email = NULL, comment = NULL), .Names = c("given", 
+    "family", "role", "email", "comment")), structure(list(given = "Amod", 
+        family = "Jog", role = NULL, email = NULL, comment = NULL), .Names = c("given", 
+    "family", "role", "email", "comment")), structure(list(given = c("Jennifer", 
+    "L"), family = "Cuzzocreo", role = NULL, email = NULL, comment = NULL), .Names = c("given", 
+    "family", "role", "email", "comment")), structure(list(given = "Elizabeth", 
+        family = "Magrath", role = NULL, email = NULL, comment = NULL), .Names = c("given", 
+    "family", "role", "email", "comment")), structure(list(given = "Adrian", 
+        family = "Gherman", role = NULL, email = NULL, comment = NULL), .Names = c("given", 
+    "family", "role", "email", "comment")), structure(list(given = "Julia", 
+        family = "Button", role = NULL, email = NULL, comment = NULL), .Names = c("given", 
+    "family", "role", "email", "comment")), structure(list(given = "James", 
+        family = "Nguyen", role = NULL, email = NULL, comment = NULL), .Names = c("given", 
+    "family", "role", "email", "comment")), structure(list(given = "Ferran", 
+        family = "Prados", role = NULL, email = NULL, comment = NULL), .Names = c("given", 
+    "family", "role", "email", "comment")), structure(list(given = c("Carole", 
+    "H"), family = "Sudre", role = NULL, email = NULL, comment = NULL), .Names = c("given", 
+    "family", "role", "email", "comment")), structure(list(given = NULL, 
+        family = "others", role = NULL, email = NULL, comment = NULL), .Names = c("given", 
+    "family", "role", "email", "comment"))), class = "person"), 
+    journal = "NeuroImage", year = "2017", publisher = "Elsevier"), .Names = c("title", 
+"author", "journal", "year", "publisher"), bibtype = "Article", key = "carass2017longitudinal")), class = "bibentry", strings = structure(character(0), .Names = character(0)), .Names = "carass2017longitudinal")
+
