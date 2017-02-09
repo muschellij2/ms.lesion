@@ -1,10 +1,12 @@
-#' @title Get Image Filenames in a data.frame
+#' @title Get Image Filenames in a \code{data.frame}
 #'
 #' @description Return a data.frame of filenames for the images
 #' @param group group of IDs to gather.  If both \code{c("training", "test")},
 #' all IDs are returned
 #' @param modalities vector of image modalities within
 #' \code{c("FLAIR", "T2", "T2", "PD")} to return
+#' @param type type of data, either \code{"raw"}, \code{"coregistered"}
+#' \code{"template"}
 #' @param long if \code{TRUE}, each row is a subject, visit, modality pair
 #' 
 #' @return Data.frame of filenames
@@ -17,10 +19,14 @@
 get_image_filenames_df = function(
   group = c("training", "test"),
   modalities = all_modalities(), 
+  type = c("raw", "coregistered", "template"),
   long = TRUE){
   
   ids = get_ids(group = group)
   modalities = tolower(modalities)
+  type = match.arg(type)
+  type = type[1]
+  
   ##########################################
   
   ##########################################
@@ -36,6 +42,12 @@ get_image_filenames_df = function(
                   stringsAsFactors = FALSE)
   ss = strsplit(df$filename, "_")
   df$id = sapply(ss, `[`, 1)
+  df$id  = basename(df$id)
+  
+  type_df = expand.grid(id = unique(df$id),
+                        type = type, stringsAsFactors = FALSE)
+  df = merge(df, type_df, all = TRUE)
+  
   # df$visit = as.numeric(sapply(ss, `[`, 2))
   
   nii.stub = function(x){
@@ -46,8 +58,9 @@ get_image_filenames_df = function(
     names(stub) = nx
     return(stub)    
   }
+  ss = strsplit(df$filename, "_")
   df$modality = nii.stub(sapply(ss, `[`, 3))
-  df$filename = file.path(df$id, df$filename)
+  df$filename = file.path(df$type, df$id, df$filename)
   
   # df$id = NULL
   ##########################################
@@ -61,7 +74,12 @@ get_image_filenames_df = function(
   # Find those not installed and warn
   ########################################  
   df$filename = system.file( "extdata", df$filename, package = "ms.lesion")
-
+  df$modality = factor(df$modality,
+                       levels = c("MPRAGE", "T2", "FLAIR", "PD"))
+  df = df[ order(df$id, df$modality), ]
+  df$modality = as.character(df$modality)
+  df$type = NULL
+  
   if (!long) {
     df = reshape(df, idvar = c("id"), 
                  timevar = "modality", direction = "wide")

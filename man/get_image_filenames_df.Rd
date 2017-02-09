@@ -5,10 +5,11 @@
 \alias{get_image_filenames_matrix}
 \alias{get_image_filenames_list}
 \alias{get_image_filenames_list_by_subject}
-\title{Get Image Filenames in a data.frame}
+\title{Get Image Filenames in a \code{data.frame}}
 \usage{
 get_image_filenames_df(group = c("training", "test"),
-  modalities = all_modalities(), long = TRUE)
+  modalities = all_modalities(), type = c("raw", "coregistered",
+  "template"), long = TRUE)
 
 get_image_filenames_matrix(...)
 
@@ -22,6 +23,9 @@ all IDs are returned}
 
 \item{modalities}{vector of image modalities within
 \code{c("FLAIR", "T2", "T2", "PD")} to return}
+
+\item{type}{type of data, either \code{"raw"}, \code{"coregistered"}
+\code{"template"}}
 
 \item{long}{if \code{TRUE}, each row is a subject, visit, modality pair}
 
