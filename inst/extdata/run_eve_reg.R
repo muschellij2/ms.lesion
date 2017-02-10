@@ -1,26 +1,35 @@
 rm(list= ls())
 library(ms.lesion)
 library(extrantsr)
+library(EveTemplate)
 
 all.exists = function(...){
   all(file.exists(...))
 }
 
-files = get_image_filenames_list_by_subject()
+eve_brain = getEvePath("Brain")
+
+files = get_image_filenames_list_by_subject(
+    type = "coregistered")
+
 isubj = 1
 for (isubj in seq_along(files)) {
+    print(isubj)
     fnames = files[[isubj]]
     id = names(files)[isubj]
-    outdir = file.path("coregistered",
+    outdir = file.path("template",
         id)
     dir.create(outdir)
     outfiles = file.path(outdir, 
         basename(fnames))
-    maskfile = file.path(outdir,
-        "brain_mask.nii.gz")
-    if (!all.exists(outfiles, maskfile)) {
-        smri_preproc(files = fnames,
-            outfiles = outfiles,
-            maskfile = maskfile)
+    if (!all.exists(outfiles)) {
+        reg = registration(
+            filename = fnames["MPRAGE"],
+            template.file = eve_brain,
+            interpolator = "Linear",
+            typeofTransform = "SyN",
+            other.files = fnames,
+            other.outfiles = outfiles)
     }
 }
+
