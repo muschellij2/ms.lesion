@@ -8,7 +8,7 @@ all.exists = function(...){
 
 files = get_image_filenames_list_by_subject()
 isubj = 1
-# for (isubj in seq_along(files)) {
+for (isubj in seq_along(files)) {
     fnames = files[[isubj]]
     id = names(files)[isubj]
     outdir = file.path("coregistered",
@@ -23,4 +23,4 @@ isubj = 1
             outfiles = outfiles,
             maskfile = maskfile)
     }
-# }
+}
