@@ -2,6 +2,7 @@ rm(list= ls())
 library(ms.lesion)
 library(extrantsr)
 library(EveTemplate)
+library(neurobase)
 
 all.exists = function(...){
   all(file.exists(...))
@@ -31,5 +32,13 @@ for (isubj in seq_along(files)) {
             other.files = fnames,
             other.outfiles = outfiles)
     }
+    o = check_nifti(outfiles)
+    o = lapply(o, function(x){
+        x[x < 0] = 0
+        x
+    })
+    mapply(function(x, fname){
+        writenii(x, fname)
+    }, o, outfiles)
 }
 
