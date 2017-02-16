@@ -70,12 +70,22 @@ get_image_filenames_df = function(
   df$modality = toupper(df$modality)
   df = merge(df, mod, sort = FALSE, by = "modality", all.x = TRUE)
 
+  if (type %in% c("coregistered")) {
+    mask_df = data.frame(
+      modality = "Brain_Mask",
+      id = ids, 
+      filename = file.path(type, ids, "brain_mask.nii.gz"),
+      type = type,
+      stringsAsFactors = FALSE)
+    df = merge(df, mask_df, all = TRUE)
+  }
   ########################################
   # Find those not installed and warn
   ########################################  
   df$filename = system.file( "extdata", df$filename, package = "ms.lesion")
   df$modality = factor(df$modality,
-                       levels = c("MPRAGE", "T2", "FLAIR", "PD"))
+                       levels = c("MPRAGE", "T2", "FLAIR", 
+                                  "PD", "Brain_Mask"))
   df = df[ order(df$id, df$modality), ]
   df$modality = as.character(df$modality)
   df$type = NULL
