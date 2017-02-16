@@ -1,7 +1,7 @@
 Package: ms.lesion
 Type: Package
 Title: Example Magnetic Resonance Imaging Data from the Multiple Sclerosis Challenge
-Version: 0.3
+Version: 0.3.1
 Date: 2017-02-09
 Author: John Muschelli <muschellij2@gmail.com>
 Maintainer: John Muschelli <muschellij2@gmail.com>
@@ -12,8 +12,6 @@ LazyData: true
 LazyLoad: true
 Imports:
     utils,
-    stats,
-    EveTemplate
+    stats
 RoxygenNote: 6.0.1
-Remotes: neuroconductor/EveTemplate
 URL: http://iacl.ece.jhu.edu/index.php/MSChallenge
