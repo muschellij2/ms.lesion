@@ -9,7 +9,7 @@
 \usage{
 get_image_filenames_df(group = c("training", "test"),
   modalities = all_modalities(), type = c("raw", "coregistered",
-  "template"), long = TRUE)
+  "template"), derived = TRUE, long = TRUE)
 
 get_image_filenames_matrix(...)
 
@@ -27,6 +27,8 @@ all IDs are returned}
 
 \item{type}{type of data, either \code{"raw"}, \code{"coregistered"}
 \code{"template"}}
+
+\item{derived}{Get the derived images (tissue classes/brain mask)}
 
 \item{long}{if \code{TRUE}, each row is a subject, 
 visit, modality pair}

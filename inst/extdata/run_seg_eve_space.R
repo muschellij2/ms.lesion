@@ -12,7 +12,8 @@ all.exists = function(...){
 type = "coregistered"
 
 files = get_image_filenames_list_by_subject(
-  type = type)
+  type = type,
+  derived = FALSE)
 
 isubj = 1
 for (isubj in seq_along(files)) {

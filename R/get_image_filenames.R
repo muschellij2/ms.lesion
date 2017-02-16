@@ -8,6 +8,8 @@
 #' \code{c("FLAIR", "T2", "T2", "PD")} to return
 #' @param type type of data, either \code{"raw"}, \code{"coregistered"}
 #' \code{"template"}
+#' @param derived Get the derived images (tissue classes/brain mask)
+#' 
 #' @param long if \code{TRUE}, each row is a subject, 
 #' visit, modality pair
 #' 
@@ -22,6 +24,7 @@ get_image_filenames_df = function(
   group = c("training", "test"),
   modalities = all_modalities(), 
   type = c("raw", "coregistered", "template"),
+  derived = TRUE,
   long = TRUE){
   
   ids = get_ids(group = group)
@@ -72,7 +75,7 @@ get_image_filenames_df = function(
   df$modality = toupper(df$modality)
   df = merge(df, mod, sort = FALSE, by = "modality", all.x = TRUE)
   
-  if (type %in% c("coregistered")) {
+  if (type %in% c("coregistered") && derived) {
     mask_df = data.frame(
       modality = "Brain_Mask",
       id = ids, 
@@ -82,7 +85,7 @@ get_image_filenames_df = function(
     df = merge(df, mask_df, all = TRUE)
   }
   
-  if (type %in% c("template", "coregistered")) {
+  if (type %in% c("template", "coregistered") && derived) {
     mask_df = data.frame(
       modality = "Tissue_Classes",
       id = ids, 
