@@ -8,8 +8,8 @@
 \title{Get Image Filenames in a \code{data.frame}}
 \usage{
 get_image_filenames_df(group = c("training", "test"),
-  modalities = all_modalities(), type = c("raw", "coregistered",
-  "template"), derived = TRUE, long = TRUE)
+  modalities = all_modalities(), type = c("raw", "coregistered", "template",
+  "affine"), derived = TRUE, long = TRUE)
 
 get_image_filenames_matrix(...)
 
@@ -26,7 +26,8 @@ all IDs are returned}
 \code{c("FLAIR", "T2", "T2", "PD")} to return}
 
 \item{type}{type of data, either \code{"raw"}, \code{"coregistered"}
-\code{"template"}}
+\code{"template"} (non-linear to Eve), 
+or \code{"affine"} (affine to Eve)}
 
 \item{derived}{Get the derived images (tissue classes/brain mask)}
 
