@@ -82,7 +82,7 @@ get_image_filenames_df = function(
     df = merge(df, mask_df, all = TRUE)
   }
   
-  if (type %in% c("template")) {
+  if (type %in% c("template", "coregistered")) {
     mask_df = data.frame(
       modality = "Tissue_Classes",
       id = ids, 

@@ -8,11 +8,11 @@ all.exists = function(...){
   all(file.exists(...))
 }
 
-eve_brain = getEvePath("Brain")
-eve_mask = getEvePath("Brain_Mask")
+# type = "template"
+type = "coregistered"
 
 files = get_image_filenames_list_by_subject(
-  type = "template")
+  type = type)
 
 isubj = 1
 for (isubj in seq_along(files)) {
@@ -20,11 +20,18 @@ for (isubj in seq_along(files)) {
   fnames = files[[isubj]]
   fnames = fnames["MPRAGE"]
   id = names(files)[isubj]
-  outdir = file.path("template",
+  outdir = file.path(type,
                      id)
   if (!dir.exists(outdir)) {
     dir.create(outdir)
   }
+  maskfile = file.path(outdir, "brain_mask.nii.gz")  
+  eve_mask = getEvePath("Brain_Mask")
+  mask_fname = switch(
+    type, 
+    template = eve_mask,
+    coregistered = maskfile)
+  
   tissues = c("Tissue_Classes")
   outfile = file.path(outdir, 
                        paste0(
@@ -33,7 +40,7 @@ for (isubj in seq_along(files)) {
                          ".nii.gz"))
   
   if (!all.exists(outfile)) {
-    reg = otropos(a = fnames, x = eve_mask)
+    reg = otropos(a = fnames, x = mask_fname)
     writenii(reg$segmentation, outfile)
   }
 }
