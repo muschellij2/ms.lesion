@@ -18,7 +18,8 @@ get_image_filenames_list(...)
 get_image_filenames_list_by_subject(...)
 }
 \arguments{
-\item{group}{group of IDs to gather.  If both \code{c("training", "test")},
+\item{group}{group of IDs to gather.  If both 
+\code{c("training", "test")},
 all IDs are returned}
 
 \item{modalities}{vector of image modalities within
@@ -27,7 +28,8 @@ all IDs are returned}
 \item{type}{type of data, either \code{"raw"}, \code{"coregistered"}
 \code{"template"}}
 
-\item{long}{if \code{TRUE}, each row is a subject, visit, modality pair}
+\item{long}{if \code{TRUE}, each row is a subject, 
+visit, modality pair}
 
 \item{...}{arguments passed to \code{\link{get_image_filenames_df}}}
 }

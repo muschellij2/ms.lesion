@@ -1,13 +1,15 @@
 #' @title Get Image Filenames in a \code{data.frame}
 #'
 #' @description Return a data.frame of filenames for the images
-#' @param group group of IDs to gather.  If both \code{c("training", "test")},
+#' @param group group of IDs to gather.  If both 
+#' \code{c("training", "test")},
 #' all IDs are returned
 #' @param modalities vector of image modalities within
 #' \code{c("FLAIR", "T2", "T2", "PD")} to return
 #' @param type type of data, either \code{"raw"}, \code{"coregistered"}
 #' \code{"template"}
-#' @param long if \code{TRUE}, each row is a subject, visit, modality pair
+#' @param long if \code{TRUE}, each row is a subject, 
+#' visit, modality pair
 #' 
 #' @return Data.frame of filenames
 #' 
@@ -69,7 +71,7 @@ get_image_filenames_df = function(
   mod = modality_df()
   df$modality = toupper(df$modality)
   df = merge(df, mod, sort = FALSE, by = "modality", all.x = TRUE)
-
+  
   if (type %in% c("coregistered")) {
     mask_df = data.frame(
       modality = "Brain_Mask",
@@ -79,13 +81,27 @@ get_image_filenames_df = function(
       stringsAsFactors = FALSE)
     df = merge(df, mask_df, all = TRUE)
   }
+  
+  if (type %in% c("template")) {
+    mask_df = data.frame(
+      modality = "Tissue_Classes",
+      id = ids, 
+      filename = file.path(type, ids, 
+                           paste0(ids, "_01_mprage_", 
+                                  "Tissue_Classes.nii.gz")),
+      type = type,
+      stringsAsFactors = FALSE)
+    df = merge(df, mask_df, all = TRUE)
+  }
   ########################################
   # Find those not installed and warn
   ########################################  
-  df$filename = system.file( "extdata", df$filename, package = "ms.lesion")
+  df$filename = system.file( "extdata", df$filename,
+                             package = "ms.lesion")
   df$modality = factor(df$modality,
                        levels = c("MPRAGE", "T2", "FLAIR", 
-                                  "PD", "Brain_Mask"))
+                                  "PD", "Brain_Mask",
+                                  "Tissue_Classes"))
   df = df[ order(df$id, df$modality), ]
   df$modality = as.character(df$modality)
   df$type = NULL
@@ -108,7 +124,7 @@ get_image_filenames_df = function(
 #' get_image_filenames() 
 #' @export
 get_image_filenames = function(...){
-
+  
   df = get_image_filenames_df(..., long = TRUE)
   filenames = df$filename
   if (length(filenames) == 0) {
