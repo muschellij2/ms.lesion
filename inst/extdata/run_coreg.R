@@ -1,7 +1,7 @@
 rm(list = ls())
 library(ms.lesion)
 library(extrantsr)
-library(mass.templates)
+library(malf.templates)
 
 all.exists = function(...){
   all(file.exists(...))
