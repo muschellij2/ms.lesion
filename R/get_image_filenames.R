@@ -117,7 +117,8 @@ get_image_filenames_df = function(
   df$modality = factor(df$modality,
                        levels = c("MPRAGE", "T2", "FLAIR", 
                                   "PD", "Brain_Mask",
-                                  "Tissue_Classes"))
+                                  "Tissue_Classes",
+                                  "FAST"))
   df = df[ order(df$id, df$modality), ]
   df$modality = as.character(df$modality)
   df$type = NULL
