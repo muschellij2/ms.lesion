@@ -3,6 +3,7 @@ library(ms.lesion)
 library(extrantsr)
 library(EveTemplate)
 library(neurobase)
+library(fslr)
 
 all.exists = function(...){
   all(file.exists(...))
@@ -44,5 +45,20 @@ for (isubj in seq_along(files)) {
     reg = otropos(a = fnames, x = mask_fname)
     writenii(reg$segmentation, outfile)
   }
+  
+  tissues = c("FAST")
+  outfile = file.path(outdir, 
+                      paste0(
+                        nii.stub(fnames, bn = TRUE), 
+                        "_", tissues,
+                        ".nii.gz"))
+  
+  if (!all.exists(outfile)) {
+    reg = fast(file = fnames, 
+               retimg = TRUE,
+               out_type = "seg",
+               opts = "--nobias")
+    writenii(nim = reg, filename = outfile)
+  }  
 }
 
