@@ -3,4 +3,3 @@
 ^\.travis\.yml$
 inst/extdata/*.R
 
-inst/extdata/original/*
