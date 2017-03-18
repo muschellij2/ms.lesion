@@ -16,7 +16,7 @@ files = get_image_filenames_list_by_subject(
   type = type,
   derived = FALSE)
 
-isubj = 1
+isubj = 8
 for (isubj in seq_along(files)) {
   print(isubj)
   fnames = files[[isubj]]
@@ -42,7 +42,9 @@ for (isubj in seq_along(files)) {
                          ".nii.gz"))
   
   if (!all.exists(outfile)) {
-    reg = otropos(a = fnames, x = mask_fname)
+    t1 = readnii(fnames)
+    rb = robust_window(t1)
+    reg = otropos(a = rb, x = mask_fname)
     writenii(reg$segmentation, outfile)
   }
   
