@@ -1,7 +1,7 @@
 Package: ms.lesion
 Type: Package
 Title: Example Magnetic Resonance Imaging Data from the Multiple Sclerosis Challenge
-Version: 0.6
+Version: 0.7
 Date: 2017-02-09
 Author: John Muschelli <muschellij2@gmail.com>
 Maintainer: John Muschelli <muschellij2@gmail.com>
