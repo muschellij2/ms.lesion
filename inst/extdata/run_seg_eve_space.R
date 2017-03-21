@@ -56,7 +56,9 @@ for (isubj in seq_along(files)) {
                         ".nii.gz"))
   
   if (!all.exists(outfile)) {
-    reg = fast(file = fnames, 
+    t1 = readnii(fnames)
+    rb = robust_window(t1)    
+    reg = fast(file = rb, 
                retimg = TRUE,
                out_type = "seg",
                opts = "--nobias")
