@@ -109,11 +109,39 @@ get_image_filenames_df = function(
       stringsAsFactors = FALSE)
     df = merge(df, mask_df, all = TRUE)
   }  
+  
+  
+  if (type %in% c("coregistered") && derived) {
+    mask_df = data.frame(
+      modality = c("mask1"),
+      id = ids, 
+      filename = file.path(type, ids, 
+                           paste0(ids, "_01_mask", 1, 
+                                  ".nii.gz")),
+      type = type,
+      stringsAsFactors = FALSE)
+    df = merge(df, mask_df, all = TRUE)
+    
+    mask_df = data.frame(
+      modality = c("mask2"),
+      id = ids, 
+      filename = file.path(type, ids, 
+                           paste0(ids, "_01_mask", 2, 
+                                  ".nii.gz")),
+      type = type,
+      stringsAsFactors = FALSE)
+    df = merge(df, mask_df, all = TRUE)    
+  }
+  
   ########################################
   # Find those not installed and warn
   ########################################  
-  df$filename = system.file( "extdata", df$filename,
-                             package = "ms.lesion")
+  # df$filename = system.file( "extdata", df$filename,
+                             # package = "ms.lesion")
+  df$filename = sapply(df$filename, function(x) {
+    system.file( "extdata", x, package = "ms.lesion")
+  })
+  
   df$modality = factor(df$modality,
                        levels = c("MPRAGE", "T2", "FLAIR", 
                                   "PD", "Brain_Mask",
