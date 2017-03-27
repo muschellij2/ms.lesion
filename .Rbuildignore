@@ -3,3 +3,4 @@
 ^\.travis\.yml$
 inst/extdata/*.R
 
+inst/extdata/training/*
