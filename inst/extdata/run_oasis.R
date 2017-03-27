@@ -54,7 +54,7 @@ for (isubj in seq_along(files)) {
 }
 
 model = do.call("oasis_training", oasis_dfs_train)
-save(model, file = "models/oasis_model.rda")
+save(model, file = "models/ms_model.rda")
 
 ms_model = model
 save(ms_model, file = "../../data/ms_model.rda", 
