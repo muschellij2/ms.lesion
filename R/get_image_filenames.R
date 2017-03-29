@@ -133,6 +133,26 @@ get_image_filenames_df = function(
     df = merge(df, mask_df, all = TRUE)    
   }
   
+  if (type %in% c("coregistered") && derived) {
+    mask_df = data.frame(
+      modality = "Default_OASIS",
+      id = ids, 
+      filename = file.path(type, ids, 
+                           paste0(ids, "_Default_OASIS.nii.gz")),
+      type = type,
+      stringsAsFactors = FALSE)
+    df = merge(df, mask_df, all = TRUE)
+    
+    mask_df = data.frame(
+      modality = "Trained_OASIS",
+      id = ids, 
+      filename = file.path(type, ids, 
+                           paste0(ids, "_Trained_OASIS.nii.gz")),
+      type = type,
+      stringsAsFactors = FALSE)
+    df = merge(df, mask_df, all = TRUE)    
+  }  
+  
   ########################################
   # Find those not installed and warn
   ########################################  
@@ -146,7 +166,8 @@ get_image_filenames_df = function(
                        levels = c("MPRAGE", "T2", "FLAIR", 
                                   "PD", "Brain_Mask",
                                   "Tissue_Classes",
-                                  "FAST", "mask1", "mask2"))
+                                  "FAST", "mask1", "mask2",
+                                  "Default_OASIS", "Trained_OASIS"))
   df = df[ order(df$id, df$modality), ]
   df$modality = as.character(df$modality)
   df$type = NULL
