@@ -3,6 +3,7 @@ library(ms.lesion)
 library(neurobase)
 library(fslr)
 library(oasis)
+library(oro.nifti)
 
 all.exists = function(...){
   all(file.exists(...))
@@ -17,6 +18,7 @@ for (isubj in seq_along(files)) {
   fnames = files[[isubj]]
   id = names(files)[isubj]
   outdir = file.path("coregistered", id)
+  df_outdir = file.path("oasis")
   
   t1_fname = fnames["MPRAGE"]
   t2_fname = fnames["T2"]
@@ -37,29 +39,41 @@ for (isubj in seq_along(files)) {
   tr_outfile = file.path(outdir, 
                          paste0(id, "_Trained_OASIS.nii.gz"))  
   
+  df_outfile = file.path(df_outdir, 
+                         paste0(id, "_oasis_data.rda"))
+  
   if (!all(file.exists(def_outfile, tr_outfile))) {
     
-    L = oasis_train_dataframe(
-      flair = FLAIR, 
-      t1 = T1, t2 = T2, pd = PD, 
-      brain_mask = MASK,
-      preproc = FALSE, 
-      normalize = TRUE
-    )
+    if (!file.exists(df_outfile)) {
+      L = oasis_train_dataframe(
+        flair = FLAIR, 
+        t1 = T1, t2 = T2, pd = PD, 
+        brain_mask = MASK,
+        preproc = FALSE, 
+        normalize = TRUE,
+        cores = 4
+      )
+      
+      oasis_dataframe = L$oasis_dataframe
+      brain_mask = L$brain_mask
+      voxel_selection = L$voxel_selection
+      preproc = L$preproc
+      rm(list = "L")
+      save(oasis_dataframe, brain_mask, 
+           voxel_selection, 
+           file = df_outfile)
+    } else {
+      load(df_outfile)
+    }
     
-    oasis_dataframe = L$oasis_dataframe
-    brain_mask = L$brain_mask
-    top_voxels = L$top_voxels
-    preproc = L$preproc
-    rm(list = "L")
 
-    
-    post_predict = function(predictions, brain_mask) {
+    verbose = TRUE
+    post_predict = function(predictions, brain_mask, voxel_selection) {
       predictions_nifti <- niftiarr(brain_mask, 0)
-      predictions_nifti[top_voxels == 1] <- predictions
+      predictions_nifti[voxel_selection == 1] <- predictions
       predictions_nifti = datatyper(predictions_nifti, 
                                     datatype = convert.datatype()$FLOAT32,
-                                    datatype = convert.bitpix()$FLOAT32
+                                    bitpix = convert.bitpix()$FLOAT32
       )
       if (verbose) {
         message("Smoothing Prediction")
@@ -77,7 +91,8 @@ for (isubj in seq_along(files)) {
       predictions <- predict( oasis::oasis_model,
                               newdata = oasis_dataframe,
                               type = 'response')  
-      prob_map = post_predict(predictions, brain_mask)
+      print(sum(predictions))
+      prob_map = post_predict(predictions, brain_mask, voxel_selection)
       print(sum(prob_map))
       writenii(prob_map, filename = def_outfile)
       # map = oasis_predict(
@@ -94,7 +109,8 @@ for (isubj in seq_along(files)) {
       predictions <- predict( ms.lesion::ms_model,
                               newdata = oasis_dataframe,
                               type = 'response')  
-      prob_map = post_predict(predictions, brain_mask)
+      print(sum(predictions))
+      prob_map = post_predict(predictions, brain_mask, voxel_selection)
       print(sum(prob_map))
       writenii(prob_map, filename = def_outfile)
       # map = oasis_predict(
