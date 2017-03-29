@@ -93,7 +93,7 @@ for (isubj in seq_along(files)) {
                               type = 'response')  
       print(sum(predictions))
       prob_map = post_predict(predictions, brain_mask, voxel_selection)
-      print(sum(prob_map))
+      # print(sum(prob_map))
       writenii(prob_map, filename = def_outfile)
       # map = oasis_predict(
       #   flair = FLAIR, 
@@ -111,8 +111,8 @@ for (isubj in seq_along(files)) {
                               type = 'response')  
       print(sum(predictions))
       prob_map = post_predict(predictions, brain_mask, voxel_selection)
-      print(sum(prob_map))
-      writenii(prob_map, filename = def_outfile)
+      # print(sum(prob_map))
+      writenii(prob_map, filename = tr_outfile)
       # map = oasis_predict(
       #   flair = FLAIR, 
       #   t1 = T1, t2 = T2, pd = PD, 
