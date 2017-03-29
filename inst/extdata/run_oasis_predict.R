@@ -31,25 +31,79 @@ for (isubj in seq_along(files)) {
   MASK = readnii(maskfile)
   
   # Using default params
-  outfile = file.path(outdir, paste0(id, "_Default_OASIS.nii.gz"))
-  if (!file.exists(outfile)) {
-    map = oasis_predict(
+  def_outfile = file.path(outdir, 
+                      paste0(id, "_Default_OASIS.nii.gz"))
+  
+  tr_outfile = file.path(outdir, 
+                         paste0(id, "_Trained_OASIS.nii.gz"))  
+  
+  if (!all(file.exists(def_outfile, tr_outfile))) {
+    
+    L = oasis_train_dataframe(
       flair = FLAIR, 
       t1 = T1, t2 = T2, pd = PD, 
-      brain_mask = MASK, preproc = FALSE, normalize = TRUE,
-      model = oasis::oasis_model)
-    writenii(map$oasis_map, filename = outfile)
-  }
+      brain_mask = MASK,
+      preproc = FALSE, 
+      normalize = TRUE
+    )
+    
+    oasis_dataframe = L$oasis_dataframe
+    brain_mask = L$brain_mask
+    top_voxels = L$top_voxels
+    preproc = L$preproc
+    rm(list = "L")
 
-  # Using re-trained model
-  outfile = file.path(outdir, paste0(id, "_Trained_OASIS.nii.gz"))
-  if (!file.exists(outfile)) {
-    map = oasis_predict(
-      flair = FLAIR, 
-      t1 = T1, t2 = T2, pd = PD, 
-      brain_mask = MASK, preproc = FALSE, normalize = TRUE,
-      model = ms.lesion::ms_model)
-    writenii(map$oasis_map, filename = outfile)
+    
+    post_predict = function(predictions, brain_mask) {
+      predictions_nifti <- niftiarr(brain_mask, 0)
+      predictions_nifti[top_voxels == 1] <- predictions
+      predictions_nifti = datatyper(predictions_nifti, 
+                                    datatype = convert.datatype()$FLOAT32,
+                                    datatype = convert.bitpix()$FLOAT32
+      )
+      if (verbose) {
+        message("Smoothing Prediction")
+      }
+      ##smooth the probability map
+      prob_map <- fslsmooth(predictions_nifti, sigma = 1.25,
+                            mask = brain_mask, retimg = TRUE,
+                            smooth_mask = TRUE)
+      return(prob_map)
+    }
+    
+
+    
+    if (!file.exists(def_outfile)) {
+      predictions <- predict( oasis::oasis_model,
+                              newdata = oasis_dataframe,
+                              type = 'response')  
+      prob_map = post_predict(predictions, brain_mask)
+      print(sum(prob_map))
+      writenii(prob_map, filename = def_outfile)
+      # map = oasis_predict(
+      #   flair = FLAIR, 
+      #   t1 = T1, t2 = T2, pd = PD, 
+      #   brain_mask = MASK, preproc = FALSE, normalize = TRUE,
+      #   model = oasis::oasis_model)
+      # writenii(map$oasis_map, filename = def_outfile)
+    }
+  
+    # Using re-trained model
+  
+    if (!file.exists(tr_outfile)) {
+      predictions <- predict( ms.lesion::ms_model,
+                              newdata = oasis_dataframe,
+                              type = 'response')  
+      prob_map = post_predict(predictions, brain_mask)
+      print(sum(prob_map))
+      writenii(prob_map, filename = def_outfile)
+      # map = oasis_predict(
+      #   flair = FLAIR, 
+      #   t1 = T1, t2 = T2, pd = PD, 
+      #   brain_mask = MASK, preproc = FALSE, normalize = TRUE,
+      #   model = ms.lesion::ms_model)
+      # writenii(map$oasis_map, filename = tr_outfile)
+    }
   }
  } 
  
