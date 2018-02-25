@@ -91,7 +91,7 @@ get_image_filenames_df = function(
       modality = "Tissue_Classes",
       id = ids, 
       filename = file.path(type, ids, 
-                           paste0(ids, "_01_mprage_", 
+                           paste0(ids, "_01_t1_", 
                                   "Tissue_Classes.nii.gz")),
       type = type,
       stringsAsFactors = FALSE)
@@ -103,7 +103,7 @@ get_image_filenames_df = function(
       modality = "FAST",
       id = ids, 
       filename = file.path(type, ids, 
-                           paste0(ids, "_01_mprage_", 
+                           paste0(ids, "_01_t1_", 
                                   "FAST.nii.gz")),
       type = type,
       stringsAsFactors = FALSE)
@@ -113,24 +113,24 @@ get_image_filenames_df = function(
   
   if (type %in% c("coregistered") && derived) {
     mask_df = data.frame(
-      modality = c("mask1"),
+      modality = c("mask"),
       id = ids, 
       filename = file.path(type, ids, 
-                           paste0(ids, "_01_mask", 1, 
+                           paste0(ids, "_01_mask", 
                                   ".nii.gz")),
       type = type,
       stringsAsFactors = FALSE)
     df = merge(df, mask_df, all = TRUE)
     
-    mask_df = data.frame(
-      modality = c("mask2"),
-      id = ids, 
-      filename = file.path(type, ids, 
-                           paste0(ids, "_01_mask", 2, 
-                                  ".nii.gz")),
-      type = type,
-      stringsAsFactors = FALSE)
-    df = merge(df, mask_df, all = TRUE)    
+    # mask_df = data.frame(
+    #   modality = c("mask2"),
+    #   id = ids, 
+    #   filename = file.path(type, ids, 
+    #                        paste0(ids, "_01_mask", 2, 
+    #                               ".nii.gz")),
+    #   type = type,
+    #   stringsAsFactors = FALSE)
+    # df = merge(df, mask_df, all = TRUE)    
   }
   
   if (type %in% c("coregistered") && derived) {
@@ -163,10 +163,10 @@ get_image_filenames_df = function(
   })
   
   df$modality = factor(df$modality,
-                       levels = c("MPRAGE", "T2", "FLAIR", 
+                       levels = c("T1", "T2", "FLAIR", 
                                   "PD", "Brain_Mask",
                                   "Tissue_Classes",
-                                  "FAST", "mask1", "mask2",
+                                  "FAST", "mask",
                                   "Default_OASIS", "Trained_OASIS"))
   df = df[ order(df$id, df$modality), ]
   df$modality = as.character(df$modality)
