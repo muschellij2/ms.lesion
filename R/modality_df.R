@@ -9,10 +9,9 @@
 #' @export
 modality_df = function(){
   mods = c(
-    "mprage",
+    "t1",
     "flair", 
-    "t2",
-    "pd"
+    "t2"
     )
   mods = matrix(mods, ncol = 1)
   mods = data.frame(mods, stringsAsFactors = FALSE)

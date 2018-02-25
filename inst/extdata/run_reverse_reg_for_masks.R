@@ -31,9 +31,12 @@ for (isubj in seq(nrow(df))) {
     id = irow$id
     pp = irow$mprage_pp
     mpr = irow$mprage
-    mask1 = irow$mask1
-    mask2 = irow$mask2
-    fnames = c(mask1, mask2)
+    # mask1 = irow$mask1
+    # mask2 = irow$mask2
+    # fnames = c(mask1, mask2)
+    mask = irow$mask
+    fnames = mask
+    
     
     outdir = file.path("coregistered",
                        id)

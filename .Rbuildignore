@@ -3,5 +3,6 @@
 ^\.travis\.yml$
 inst/extdata/*.R
 
+inst/extdata/README.txt
 inst/extdata/training/*
 inst/extdata/model/*oasis_df*.rda

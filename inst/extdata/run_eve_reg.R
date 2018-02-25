@@ -26,12 +26,12 @@ for (isubj in seq_along(files)) {
     id = names(files)[isubj]
     outdir = file.path(out_fol,
         id)
-    dir.create(outdir)
+    dir.create(outdir, recursive = TRUE)
     outfiles = file.path(outdir, 
         basename(fnames))
     if (!all.exists(outfiles)) {
         reg = registration(
-            filename = fnames["MPRAGE"],
+            filename = fnames["T1"],
             template.file = eve_brain,
             interpolator = "Linear",
             typeofTransform = typeofTransform,
