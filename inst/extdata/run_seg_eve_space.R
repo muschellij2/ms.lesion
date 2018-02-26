@@ -18,6 +18,7 @@ files = get_image_filenames_list_by_subject(
   derived = FALSE)
 
 isubj = 1
+
 for (isubj in seq_along(files)) {
   print(isubj)
   fnames = files[[isubj]]
@@ -46,6 +47,7 @@ for (isubj in seq_along(files)) {
   
   if (!all.exists(outfile)) {
     t1 = readnii(fnames)
+    t1[ t1 < 0 ] = 0
     rb = robust_window(t1)
     reg = otropos(a = rb, x = mask_fname)
     writenii(reg$segmentation, outfile)
@@ -60,7 +62,10 @@ for (isubj in seq_along(files)) {
   
   if (!all.exists(outfile)) {
     t1 = readnii(fnames)
-    rb = robust_window(t1)    
+    t1[ t1 < 0 ] = 0
+    rb = robust_window(t1)  
+    mask = readnii(mask_fname)
+    rb = mask_img(rb, mask)
     reg = fast(file = rb, 
                retimg = TRUE,
                out_type = "seg",
