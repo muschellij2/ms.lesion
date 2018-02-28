@@ -1,4 +1,6 @@
-#' @title Get Image Filenames in a \code{data.frame}
+# \code{"template"} (non-linear to Eve), 
+# or \code{"affine"} (affine to Eve)
+#' #' @title Get Image Filenames in a \code{data.frame}
 #'
 #' @description Return a data.frame of filenames for the images
 #' @param group group of IDs to gather.  If both 
@@ -7,8 +9,6 @@
 #' @param modalities vector of image modalities within
 #' \code{c("FLAIR", "T2", "T2", "PD")} to return
 #' @param type type of data, either \code{"raw"}, \code{"coregistered"}
-#' \code{"template"} (non-linear to Eve), 
-#' or \code{"affine"} (affine to Eve)
 #' @param derived Get the derived images (tissue classes/brain mask)
 #' 
 #' @param long if \code{TRUE}, each row is a subject, 
@@ -24,7 +24,7 @@
 get_image_filenames_df = function(
   group = c("training", "test"),
   modalities = all_modalities(), 
-  type = c("raw", "coregistered", "template", "affine"),
+  type = c("raw", "coregistered"),
   derived = TRUE,
   long = TRUE){
   

@@ -47,10 +47,7 @@ for (isubj in seq_along(files)) {
   
   if (!all.exists(outfile)) {
     t1 = readnii(fnames)
-<<<<<<< HEAD
     t1[ t1 < 0 ] = 0
-=======
->>>>>>> 0112a10a9b474bab0e238ce47cc69f7fca4fd0c0
     rb = robust_window(t1)
     reg = otropos(a = rb, x = mask_fname)
     writenii(reg$segmentation, outfile)
@@ -65,14 +62,11 @@ for (isubj in seq_along(files)) {
   
   if (!all.exists(outfile)) {
     t1 = readnii(fnames)
-<<<<<<< HEAD
     t1[ t1 < 0 ] = 0
-    rb = robust_window(t1)  
     mask = readnii(mask_fname)
-    rb = mask_img(rb, mask)
-=======
-    rb = robust_window(t1)    
->>>>>>> 0112a10a9b474bab0e238ce47cc69f7fca4fd0c0
+    t1 = mask_img(t1, mask)
+    rb = robust_window(t1)  
+
     reg = fast(file = rb, 
                retimg = TRUE,
                out_type = "seg",
