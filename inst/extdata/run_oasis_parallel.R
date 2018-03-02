@@ -20,7 +20,8 @@ dir.create(outdir, showWarnings = FALSE)
   fnames = files[[isubj]]
   id = names(files)[isubj]
   
-  outfile = file.path(outdir, paste0(id, "_oasis_df.rda"))
+  outfile = file.path(outdir, 
+    paste0(id, "_oasis_df.rda"))
   
   if (!file.exists(outfile)) {  
     t1_fname = fnames["T1"]
@@ -43,9 +44,10 @@ dir.create(outdir, showWarnings = FALSE)
       flair = FLAIR, 
       t1 = T1, t2 = T2, pd = PD, 
       gold_standard = GOLD_STANDARD,
-      brain_mask = MASK, preproc = FALSE, normalize = TRUE,
+      brain_mask = MASK, preproc = FALSE, 
+      normalize = TRUE,
       return_preproc = FALSE,
-      cores = 4)
+      cores = 1)
     df = df$oasis_dataframe
     save(df, file = outfile)
   }
