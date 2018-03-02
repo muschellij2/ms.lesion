@@ -179,7 +179,8 @@ get_image_filenames_df = function(
                                   "PD", "Brain_Mask",
                                   "Tissue_Classes",
                                   "FAST", "mask",
-                                  "Default_OASIS", "Trained_OASIS"))
+                                  "Default_OASIS", "Trained_OASIS",
+                                  "Cortical_Thickness"))
   df = df[ order(df$id, df$modality), ]
   df$modality = as.character(df$modality)
   df$type = NULL
@@ -189,6 +190,7 @@ get_image_filenames_df = function(
                  timevar = "modality", direction = "wide")
     cn = colnames(df)
     cn = sub("^filename[.]", "", cn)
+    # df = df[ file.exists(df$filename),]
     colnames(df) = cn
   }  
   return(df)
