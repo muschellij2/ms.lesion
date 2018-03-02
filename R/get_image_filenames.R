@@ -98,6 +98,18 @@ get_image_filenames_df = function(
     df = merge(df, mask_df, all = TRUE)
   }
   
+  if (type %in% c("template", "coregistered") && derived) {
+    mask_df = data.frame(
+      modality = "Cortical_Thickness",
+      id = ids, 
+      filename = file.path(type, ids, 
+                           paste0(ids, "_01_t1_", 
+                                  "cortthick.nii.gz")),
+      type = type,
+      stringsAsFactors = FALSE)
+    df = merge(df, mask_df, all = TRUE)
+  }  
+  
   if (type %in% c("coregistered") && derived) {
     mask_df = data.frame(
       modality = "FAST",

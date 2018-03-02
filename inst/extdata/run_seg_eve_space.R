@@ -17,7 +17,7 @@ files = get_image_filenames_list_by_subject(
   type = type,
   derived = FALSE)
 
-isubj = 1
+isubj = 8
 
 for (isubj in seq_along(files)) {
   print(isubj)
@@ -45,12 +45,22 @@ for (isubj in seq_along(files)) {
                          "_", tissues,
                          ".nii.gz"))
   
+  tprobs = c("CSF", "GM", "WM")
+  tfiles = file.path(outdir, 
+                      paste0(
+                        nii.stub(fnames, bn = TRUE), 
+                        "_", tprobs,
+                        ".nii.gz"))  
+  
   if (!all.exists(outfile)) {
     t1 = readnii(fnames)
     t1[ t1 < 0 ] = 0
     rb = robust_window(t1)
     reg = otropos(a = rb, x = mask_fname)
     writenii(reg$segmentation, outfile)
+    mapply(function(img, fname) {
+      writenii(img, fname)
+    }, reg$probabilityimages, tfiles)
   }
   
   tissues = c("FAST")
@@ -74,4 +84,3 @@ for (isubj in seq_along(files)) {
     writenii(nim = reg, filename = outfile)
   }  
 }
-

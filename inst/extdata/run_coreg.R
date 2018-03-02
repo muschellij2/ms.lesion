@@ -2,6 +2,7 @@ rm(list = ls())
 library(ms.lesion)
 library(extrantsr)
 library(malf.templates)
+library(neurobase)
 
 all.exists = function(...){
   all(file.exists(...))
@@ -9,8 +10,9 @@ all.exists = function(...){
 
 files = get_image_filenames_list_by_subject()
 isubj = 1
+isubj = as.numeric(Sys.getenv("SGE_TASK_ID"))
 
-for (isubj in seq_along(files)) {
+# for (isubj in seq_along(files)) {
   print(isubj)
   fnames = files[[isubj]]
   fnames = fnames[c("FLAIR", "T1", "T2")]
@@ -48,8 +50,13 @@ for (isubj in seq_along(files)) {
       maskfile = maskfile,
       correct_after_mask = TRUE)
   }
+  imgs = lapply(outfiles, function(fname) {
+    img = readnii(fname)
+    img[ img < 0 ] = 0
+    writenii(img, fname)
+  })  
   # for (ifile in outfiles) {
   #   print(ifile)
   #   bias_correct(file = ifile, correction = "N4", outfile = ifile)
   # }
-}
+# }
