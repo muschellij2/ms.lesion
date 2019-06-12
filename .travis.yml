@@ -1,8 +1,18 @@
-language: R
-sudo: no
+language: r
 cache: packages
-use_bioc: yes
-bioc_required: yes
-warnings_are_errors: yes
-r_check_args: --as-cran
 
+r_check_args: "--as-cran --install-args=--build"
+
+os:
+  - linux
+  - osx
+
+deploy:
+  provider: releases
+  api_key:
+    secure: fEK4n7JDzcEp9KQjKnqNBt0b147+IvKBkgHiqaPOUYEMk48M8i8rz3psloij+R5913uoj9GTfJOT6vHrnmgakd7xmvY0agb6Vvg02dAlrotxPkJ0i3IKPG4MgactnUDPtYD7r5hRl4P/9n+sMamIXIH5HwZ2S1Ftkd+dP3Dhf/g5OHTCb04+zyOnD0S/Kt9F8OiKcbdK0Z25nSr850LPpL5xxyc3KRIKMRog3JigzDSLNIPmQJICEYHD3qEzm6LFfRsS6E97iGp64TXImkZtNBvaUkseKqguGCPNGvT0v1rdJXCGLWX3EhnXQ1N7VOnqXsg5gl44Ui96+3wfPARceID95gWtoathkutrStX+P2oOSwhg3fatoaSp/fN4m6sXIicck+WY1/jBafJ5U/WQRb3enj9+XHP3fKaz4cQcsTysNIEbExMsNitxm39wPivUAUGPMpURZsM7RU9UpJ6mfFpMfozZOnyZCFMOKvbvaGAJME9z056vaIF31+FaX6Aaoa6vd+JZqYaI+2mRgsMVhFGAKsH9l9XKDPsdtNVwL+SdpF2vjOCIkuqJzZPicdzQeBjAQcqff0bceKRALIUGzFyQnbZ4cOAWztJNkDa0c1X7iDLqnod5kksJs612JyNL1Gici1pcMqWGouzSVjosz9WtppXwygYT3YIOjHTldHQ=
+  file_glob: true    
+  file: ms.lesion*.t*gz
+  on:
+    tags: true    
+    repo: muschellij2/ms.lesion
