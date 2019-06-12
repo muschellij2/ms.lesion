@@ -4,8 +4,8 @@
 \alias{get_par_filenames}
 \title{Get Filenames of Par files}
 \usage{
-get_par_filenames(ids = get_ids(), modalities = c("FLAIR", "MPRAGE", "T2w",
-  "fMRI", "DTI"), visits = c(1, 2))
+get_par_filenames(ids = get_ids(), modalities = c("FLAIR", "MPRAGE",
+  "T2w", "fMRI", "DTI"), visits = c(1, 2))
 }
 \arguments{
 \item{ids}{ID to return}
